@@ -5,19 +5,25 @@ using UnityEngine;
 public class Controller : MonoBehaviour
 {
     Node startNode;
-    Node endNode;    
+    Node endNode;
+
+    Grid2D grid2D;
     
-    void Start()
+    void Awake()
     {
-        
+        grid2D = FindObjectOfType<Grid2D>();
     }
     
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonUp(0))
         {
             startNode = RayCast();
-            Debug.Log(startNode);
+            //Debug.Log(startNode);
+
+            Node[] nodeArr = grid2D.Neighbours(startNode);
+            for (int i = 0; i < nodeArr.Length; i++)
+                Debug.Log(nodeArr[i]);
         }
         else if (Input.GetMouseButtonDown(1))
         {
