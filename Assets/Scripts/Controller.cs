@@ -12,6 +12,15 @@ public class Controller : MonoBehaviour
     void Awake()
     {
         grid2D = FindObjectOfType<Grid2D>();
+        HashSet<int> hashset = new HashSet<int>();
+        hashset.Add(0);
+        hashset.Add(1);
+        hashset.Add(1);
+        hashset.Add(2);
+        foreach (int i in hashset)
+        {
+            Debug.Log(i);
+        }
     }
     
     void Update()

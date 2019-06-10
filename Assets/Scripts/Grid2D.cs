@@ -96,4 +96,17 @@ public class Grid2D : MonoBehaviour
         }
         return null;
     }
+
+    public Node FindNode (Vector3 pos)
+    {
+        for (int row = 0; row < nodeCount; row++) {
+            for (int col = 0; col < nodeCount; col++) {
+                if (nodeArr[row, col].Contains(pos))
+                {
+                    return nodeArr[row, col];
+                }
+            }
+        }
+        return null;
+    }
 }

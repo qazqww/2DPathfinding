@@ -6,24 +6,30 @@ public class Node : MonoBehaviour
 {
     Collider2D collider;
 
-    float gCost;
-    float hCost;
-    float fCost;
-    public float GCost
+    NodeType nodeType = NodeType.None;
+    public NodeType nType
+    {
+        get { return nodeType; }
+    }
+
+    int hCost = 0;
+    int fCost = 0;
+    int gCost = 0;
+    public int GCost
     {
         get { return gCost; }
     }
-    public float HCost
+    public int HCost
     {
         get { return hCost; }
     }
-    public float FCost
+    public int FCost
     {
         get { return gCost + hCost; }
     }
 
-    int row;
-    int col;
+    int row = 0;
+    int col = 0;
     public int Row
     {
         get { return row; }
@@ -55,12 +61,12 @@ public class Node : MonoBehaviour
         
     }
 
-    public void SetGCost(float cost)
+    public void SetGCost(int cost)
     {
         gCost = cost;
     }
 
-    public void SetHCost(float cost)
+    public void SetHCost(int cost)
     {
         hCost = cost;
     }
@@ -76,8 +82,13 @@ public class Node : MonoBehaviour
         this.parent = parent;
     }
 
+    public void SetNodeType(NodeType nodeType)
+    {
+        this.nodeType = nodeType;
+    }
+
     public bool Contains(Vector3 pos)
     {
         return collider.bounds.Contains(pos);
-    }
+    }    
 }
