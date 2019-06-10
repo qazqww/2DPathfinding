@@ -20,6 +20,23 @@ public class Node : MonoBehaviour
         get { return gCost + hCost; }
     }
 
+    int row;
+    int col;
+    public int Row
+    {
+        get { return row; }
+    }
+    public int Col
+    {
+        get { return col; }
+    }
+
+    Node parent;
+    public Node Parent
+    {
+        get { return parent; }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -40,5 +57,16 @@ public class Node : MonoBehaviour
     public void SetHCost(float cost)
     {
         hCost = cost;
+    }
+
+    public void SetNode(int row, int col)
+    {
+        this.row = row;
+        this.col = col;
+    }
+
+    public void SetParent(Node parent)
+    {
+        this.parent = parent;
     }
 }

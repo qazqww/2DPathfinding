@@ -4,15 +4,11 @@ using UnityEngine;
 
 public class Pathfinding : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public int GetDistance(Node a, Node b)
     {
-        
-    }
+        int x = Mathf.Abs(a.Col - b.Col);
+        int y = Mathf.Abs(a.Row - b.Row);
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        return 14 * Mathf.Min(x, y) + 10 * Mathf.Abs(x - y);
     }
 }
