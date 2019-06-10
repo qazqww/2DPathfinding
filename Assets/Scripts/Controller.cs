@@ -16,12 +16,12 @@ public class Controller : MonoBehaviour
     
     void Update()
     {
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonDown(0))
         {
             startNode = RayCast();
             //Debug.Log(startNode);
 
-            Node[] nodeArr = grid2D.Neighbours(startNode);
+            Node[] nodeArr = grid2D.Neighbours(startNode.Pos);
             for (int i = 0; i < nodeArr.Length; i++)
                 Debug.Log(nodeArr[i]);
         }

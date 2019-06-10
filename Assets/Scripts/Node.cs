@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Node : MonoBehaviour
 {
+    Collider2D collider;
+
     float gCost;
     float hCost;
     float fCost;
@@ -37,13 +39,17 @@ public class Node : MonoBehaviour
         get { return parent; }
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public Vector3 Pos
     {
-        
+        get { return transform.position; }
+        set { transform.position = value; }
     }
 
-    // Update is called once per frame
+    void Awake()
+    {
+        collider = GetComponent<Collider2D>();
+    }
+
     void Update()
     {
         
@@ -68,5 +74,10 @@ public class Node : MonoBehaviour
     public void SetParent(Node parent)
     {
         this.parent = parent;
+    }
+
+    public bool Contains(Vector3 pos)
+    {
+        return collider.bounds.Contains(pos);
     }
 }

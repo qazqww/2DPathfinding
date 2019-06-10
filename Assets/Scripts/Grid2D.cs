@@ -82,4 +82,18 @@ public class Grid2D : MonoBehaviour
 
         return neighbours.ToArray();
     }
+
+    // 위치값을 받아 작동
+    public Node[] Neighbours(Vector3 pos)
+    {
+        for (int row = 0; row < nodeCount; row++) {
+            for (int col = 0; col < nodeCount; col++) {
+                if(nodeArr[row,col].Contains(pos))
+                {
+                    return Neighbours(nodeArr[row, col]);
+                }
+            }
+        }
+        return null;
+    }
 }
