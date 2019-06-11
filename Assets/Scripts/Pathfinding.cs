@@ -26,11 +26,15 @@ public class Pathfinding : MonoBehaviour
     {
         Node playerNode = grid2D.FindNode(player);
         Node targetNode = grid2D.FindNode(target);
-        Node currentNode = playerNode;
-
-        targetNode.SetParent(null);
+        Node currentNode = playerNode;        
+        
         playerNode.SetGCost(0);
         playerNode.SetHCost(GetDistance(playerNode, targetNode));
+        playerNode.SetParent(null);
+        targetNode.SetParent(null);
+
+        openList.Clear();
+        closedList.Clear();
 
         do
         {
@@ -41,7 +45,7 @@ public class Pathfinding : MonoBehaviour
             {
                 if (closedList.Contains(neighbours[i]))     // 이미 처리한 노드 생략
                     continue;
-                if (neighbours[i].nType == NodeType.Wall)   // 벽인 노드 생략
+                if (neighbours[i].nType == NodeType.Wall)   // 이동할 수 없는 노드 생략
                     continue;
 
                 // ※ G Cost : 시작 위치에서 현재 위치까지

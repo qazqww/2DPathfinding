@@ -21,11 +21,6 @@ public class Controller : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             startNode = RayCast();
-            //Debug.Log(startNode);
-
-            //Node[] nodeArr = grid2D.Neighbours(startNode.Pos);
-            //for (int i = 0; i < nodeArr.Length; i++)
-            //    Debug.Log(nodeArr[i]);
         }
         else if (Input.GetMouseButtonDown(1))
         {

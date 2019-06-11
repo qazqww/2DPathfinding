@@ -2,16 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum NodeType
-{
-    None,
-    Wall,
-}
-
 public class Grid2D : MonoBehaviour
 {
-    NodeType nodeType;
-
     Node[,] nodeArr;
     // List<List<Node>> nodeArr = new List<List<Node>>();
 
@@ -26,11 +18,6 @@ public class Grid2D : MonoBehaviour
         CreateGrid(4);
     }
 
-    void Update()
-    {
-        
-    }
-
     void CreateGrid(int nodeCount)
     {
         float center = nodeCount / 2f;
@@ -39,10 +26,8 @@ public class Grid2D : MonoBehaviour
 
         nodeArr = new Node[nodeCount, nodeCount];
 
-        for(int row = 0; row < nodeCount; row++)
-        {
-            for (int col = 0; col < nodeCount; col++)
-            {
+        for(int row = 0; row < nodeCount; row++) {
+            for (int col = 0; col < nodeCount; col++) {
                 Node node = Instantiate(nodePrefab, new Vector3(col + 0.5f - center, row + 0.5f - center, 0), Quaternion.identity);
                 nodeArr[row, col] = node;
                 node.name = "Node-" + ++count;
@@ -72,18 +57,18 @@ public class Grid2D : MonoBehaviour
     public Node[] Neighbours(Node node)
     {
         neighbours.Clear();
-        for (int i = -1; i <= 1; i++) {
-            for (int j = -1; j <= 1; j++) {
-                if (i == 0 && j == 0) continue;
-                if (CheckNode(node.Row + i, node.Col + j))
-                    neighbours.Add(nodeArr[node.Row + i, node.Col + j]);
+        for (int row = -1; row <= 1; row++) {
+            for (int col = -1; col <= 1; col++) {
+                if (row == 0 && col == 0) continue;
+                if (CheckNode(node.Row + row, node.Col + col))
+                    neighbours.Add(nodeArr[node.Row + row, node.Col + col]);
             }
         }
 
         return neighbours.ToArray();
     }
 
-    // 위치값을 받아 작동
+    // 위치값을 받아 그 위치에 해당하는 노드를 넘김
     public Node[] Neighbours(Vector3 pos)
     {
         for (int row = 0; row < nodeCount; row++) {

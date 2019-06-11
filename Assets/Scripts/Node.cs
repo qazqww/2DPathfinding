@@ -2,6 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum NodeType
+{
+    None,
+    Wall,
+}
+
 public class Node : MonoBehaviour
 {
     Collider2D collider;
@@ -13,9 +19,9 @@ public class Node : MonoBehaviour
         get { return nodeType; }
     }
 
-    int hCost = 0;
-    int fCost = 0;
     int gCost = 0;
+    int hCost = 0;
+    int fCost = 0;    
     public int GCost
     {
         get { return gCost; }
@@ -52,17 +58,13 @@ public class Node : MonoBehaviour
         set { transform.position = value; }
     }
 
+
     void Awake()
     {
         collider = GetComponent<Collider2D>();
         Renderer r = GetComponent<Renderer>();
         if (r != null)
             material = r.material;
-    }
-
-    void Update()
-    {
-        
     }
 
     public void SetGCost(int cost)
