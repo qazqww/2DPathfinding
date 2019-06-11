@@ -45,12 +45,12 @@ public class Pathfinding : MonoBehaviour
             {
                 if (closedList.Contains(neighbours[i]))     // 이미 처리한 노드 생략
                     continue;
-                if (neighbours[i].nType == NodeType.Wall)   // 이동할 수 없는 노드 생략
+                if (neighbours[i].nType == NodeType.Wall)   // 이동할 수 없는(벽) 노드 생략
                     continue;
 
                 // ※ G Cost : 시작 위치에서 현재 위치까지
 
-                // 현재 노드에서 이웃 노드까지의 거리
+                // 처음 노드에서 이웃 노드까지의 거리
                 neighbours[i].SetGCost(GetDistance(neighbours[i], playerNode));
                 // 현재 노드까지의 거리 + 현재 노드에서 이웃 노드까지의 거리
                 int gCost = currentNode.GCost + GetDistance(neighbours[i], currentNode);
