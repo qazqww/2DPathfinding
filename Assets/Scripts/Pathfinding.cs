@@ -6,12 +6,12 @@ public class Pathfinding : MonoBehaviour
 {
     Grid2D grid2D;
     List<Node> closedList = new List<Node>();
-    HashSet<Node> openList = new HashSet<Node>();
+    List<Node> openList = new List<Node>();
+    NodeComparer nodeComparer = new NodeComparer();
 
     private void Awake()
     {
         grid2D = FindObjectOfType<Grid2D>();
-        openList = new HashSet<Node>(new NodeComparer());
     }
 
     public int GetDistance(Node a, Node b)
@@ -28,6 +28,7 @@ public class Pathfinding : MonoBehaviour
         Node targetNode = grid2D.FindNode(target);
         Node currentNode = playerNode;
 
+        targetNode.SetParent(null);
         playerNode.SetGCost(0);
         playerNode.SetHCost(GetDistance(playerNode, targetNode));
 
@@ -59,7 +60,8 @@ public class Pathfinding : MonoBehaviour
                     neighbours[i].SetHCost(hCost);
                     neighbours[i].SetParent(currentNode);
 
-                    openList.Add(neighbours[i]);
+                    if (!openList.Contains(neighbours[i]))
+                        openList.Add(neighbours[i]);
                 }
             }
 
@@ -67,9 +69,47 @@ public class Pathfinding : MonoBehaviour
                 openList.Remove(currentNode);
             closedList.Add(currentNode);
 
+            // 최소 비용인 노드를 현재 노드로 설정
+            if (openList.Count > 0)
+            {
+                openList.Sort(nodeComparer);
+                currentNode = openList[0];
+            }
+
             if (currentNode == targetNode)
+            {
+                List<Node> nodes = RetracePath(currentNode);
+                foreach(Node n in nodes)
+                {
+                    n.GetComponent<Renderer>().material.color = Color.gray;
+                }
+
+                // 2초 뒤에 ResetNode 함수 호출
+                Invoke("ResetNode", 2.0f);
+
+                Debug.Log("찾음!");
                 break;
+            }
 
         } while (openList.Count > 0);
+    }
+
+    public List<Node> RetracePath(Node curNode)
+    {
+        List<Node> nodes = new List<Node>();
+
+        while(curNode != null)
+        {
+            nodes.Add(curNode);
+            curNode = curNode.Parent;
+        }
+
+        nodes.Reverse();
+        return nodes;
+    }
+
+    public void ResetNode()
+    {
+        grid2D.ResetNode();
     }
 }

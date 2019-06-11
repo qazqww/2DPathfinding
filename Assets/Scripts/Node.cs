@@ -5,6 +5,7 @@ using UnityEngine;
 public class Node : MonoBehaviour
 {
     Collider2D collider;
+    Material material;
 
     NodeType nodeType = NodeType.None;
     public NodeType nType
@@ -54,6 +55,9 @@ public class Node : MonoBehaviour
     void Awake()
     {
         collider = GetComponent<Collider2D>();
+        Renderer r = GetComponent<Renderer>();
+        if (r != null)
+            material = r.material;
     }
 
     void Update()
@@ -85,6 +89,12 @@ public class Node : MonoBehaviour
     public void SetNodeType(NodeType nodeType)
     {
         this.nodeType = nodeType;
+    }
+
+    public void SetColor(Color color)
+    {
+        if (material != null)
+            material.color = color;
     }
 
     public bool Contains(Vector3 pos)

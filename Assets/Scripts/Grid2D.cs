@@ -23,7 +23,7 @@ public class Grid2D : MonoBehaviour
     void Awake()
     {
         nodePrefab = Resources.Load<Node>("Node");
-        CreateGrid(3);
+        CreateGrid(4);
     }
 
     void Update()
@@ -108,5 +108,14 @@ public class Grid2D : MonoBehaviour
             }
         }
         return null;
+    }
+
+    public void ResetNode()
+    {
+        for (int row = 0; row < nodeCount; row++) {
+            for (int col = 0; col < nodeCount; col++) {
+                    nodeArr[row, col].SetColor(Color.white);
+            }
+        }
     }
 }

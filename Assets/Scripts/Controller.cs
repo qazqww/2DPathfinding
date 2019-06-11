@@ -8,19 +8,12 @@ public class Controller : MonoBehaviour
     Node endNode;
 
     Grid2D grid2D;
-    
+    Pathfinding pathfinding;
+
     void Awake()
     {
         grid2D = FindObjectOfType<Grid2D>();
-        HashSet<int> hashset = new HashSet<int>();
-        hashset.Add(0);
-        hashset.Add(1);
-        hashset.Add(1);
-        hashset.Add(2);
-        foreach (int i in hashset)
-        {
-            Debug.Log(i);
-        }
+        pathfinding = FindObjectOfType<Pathfinding>();
     }
     
     void Update()
@@ -30,14 +23,15 @@ public class Controller : MonoBehaviour
             startNode = RayCast();
             //Debug.Log(startNode);
 
-            Node[] nodeArr = grid2D.Neighbours(startNode.Pos);
-            for (int i = 0; i < nodeArr.Length; i++)
-                Debug.Log(nodeArr[i]);
+            //Node[] nodeArr = grid2D.Neighbours(startNode.Pos);
+            //for (int i = 0; i < nodeArr.Length; i++)
+            //    Debug.Log(nodeArr[i]);
         }
         else if (Input.GetMouseButtonDown(1))
         {
             endNode = RayCast();
-            Debug.Log(endNode);
+            if (startNode != null && endNode != null)
+                pathfinding.FindPath(startNode.Pos, endNode.Pos);
         }
     }
 
