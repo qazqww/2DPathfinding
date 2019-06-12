@@ -11,9 +11,11 @@ public class Grid2D : MonoBehaviour
     
     public int nodeCount = 8;
     public Node nodePrefab;
+    public Transform root;
 
     void Awake()
     {
+        root = transform.Find("Root");
         nodePrefab = Resources.Load<Node>("Node");
         CreateGrid(nodeCount);
     }
@@ -28,16 +30,11 @@ public class Grid2D : MonoBehaviour
 
         for(int row = 0; row < nodeCount; row++) {
             for (int col = 0; col < nodeCount; col++) {
-                Node node = Instantiate(nodePrefab, new Vector3(col + 0.5f - center, row + 0.5f - center, 0), Quaternion.identity);
+                Node node = Instantiate(nodePrefab, Vector3.zero, Quaternion.identity, root);
                 nodeArr[row, col] = node;
                 node.name = "Node-" + ++count;
                 node.SetNode(row, col);
-
-                Renderer renderer = node.GetComponent<Renderer>();
-                //if (renderer != null) {
-                //    Vector3 color = Random.insideUnitSphere;
-                //    renderer.material.color = new Color(color.x, color.y, color.z);
-                //}
+                node.transform.localPosition = new Vector3(col * 100 - (nodeCount - 1) * 50, row * 100 - (nodeCount - 1) * 50, 0);
             }
         }
     }
@@ -82,16 +79,23 @@ public class Grid2D : MonoBehaviour
         return null;
     }
 
+    public Node ClickNode()
+    {
+        return FindNode(Input.mousePosition);
+    }
+
     public Node FindNode (Vector3 pos)
     {
-        for (int row = 0; row < nodeCount; row++) {
-            for (int col = 0; col < nodeCount; col++) {
-                if (nodeArr[row, col].Contains(pos))
+        for (int row = 0; row < nodeCount; row++)
+            for (int col = 0; col < nodeCount; col++)
+            {
+                RectTransform rect = nodeArr[row, col].GetComponent<RectTransform>();
+                if (RectTransformUtility.RectangleContainsScreenPoint(rect, pos))
                 {
+                    Debug.Log(nodeArr[row, col] + " 클릭");
                     return nodeArr[row, col];
                 }
             }
-        }
         return null;
     }
 

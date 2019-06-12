@@ -33,7 +33,6 @@ public class Pathfinding : MonoBehaviour
     {
         startNode = grid2D.FindNode(player);
         targetNode = grid2D.FindNode(target);
-        Node currentNode = startNode;
 
         startNode.SetGCost(0);
         startNode.SetHCost(GetDistance(startNode, targetNode));
@@ -43,6 +42,9 @@ public class Pathfinding : MonoBehaviour
 
         openList.Clear();
         closedList.Clear();
+
+        ResetColor();
+        startNode.SetColor(Color.green);
     }
 
     public void Step()
@@ -72,7 +74,6 @@ public class Pathfinding : MonoBehaviour
                 neighbours[i].SetGCost(gCost);
                 neighbours[i].SetHCost(hCost);
                 neighbours[i].SetParent(curNode);
-                neighbours[i].SetColor(Color.yellow);
 
                 if (!openList.Contains(neighbours[i]))
                     openList.Add(neighbours[i]);
@@ -98,13 +99,8 @@ public class Pathfinding : MonoBehaviour
             pathNode = nodes;
             pathNode.RemoveAt(pathNode.Count - 1);
 
-            foreach (Node n in nodes)
-            {
-                n.GetComponent<Renderer>().material.color = Color.gray;
-            }
-
             // 2초 뒤에 ResetNode 함수 호출
-            Invoke("ResetNode", 2.0f);
+            //Invoke("ResetNode", 2.0f);
             Debug.Log("찾음!");
         }
         ResetColor();
@@ -137,9 +133,6 @@ public class Pathfinding : MonoBehaviour
                     continue;
 
                 // ※ G Cost : 시작 위치에서 현재 위치까지
-
-                // 처음 노드에서 이웃 노드까지의 거리
-                neighbours[i].SetGCost(GetDistance(neighbours[i], playerNode));
                 // 현재 노드까지의 거리 + 현재 노드에서 이웃 노드까지의 거리
                 int gCost = currentNode.GCost + GetDistance(neighbours[i], currentNode);
 
@@ -171,13 +164,9 @@ public class Pathfinding : MonoBehaviour
             if (currentNode == targetNode)
             {
                 List<Node> nodes = RetracePath(currentNode);
-                foreach(Node n in nodes)
-                {
-                    n.GetComponent<Renderer>().material.color = Color.gray;
-                }
 
                 // 2초 뒤에 ResetNode 함수 호출
-                Invoke("ResetNode", 2.0f);
+                //Invoke("ResetNode", 2.0f);
 
                 Debug.Log("찾음!");
                 break;

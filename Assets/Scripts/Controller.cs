@@ -25,8 +25,6 @@ public class Controller : MonoBehaviour
         else if (Input.GetMouseButtonDown(1))
         {
             endNode = RayCast();
-            //if (startNode != null && endNode != null)
-            //    pathfinding.FindPath(startNode.Pos, endNode.Pos);
             pathfinding.Ready(startNode.Pos, endNode.Pos);
         }
         else if (Input.GetKeyDown(KeyCode.Space))
@@ -37,11 +35,6 @@ public class Controller : MonoBehaviour
 
     Node RayCast()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit2D hit2D = Physics2D.Raycast(ray.origin, ray.direction, 100);
-        if (hit2D.transform != null)
-            return hit2D.transform.GetComponent<Node>();
-
-        return null;
+        return grid2D.ClickNode();
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum NodeType
 {
@@ -11,7 +12,11 @@ public enum NodeType
 public class Node : MonoBehaviour
 {
     Collider2D collider;
-    Material material;
+    
+    Text gText;
+    Text hText;
+    Text fText;
+    Image image;
 
     NodeType nodeType = NodeType.None;
     public NodeType nType
@@ -60,21 +65,25 @@ public class Node : MonoBehaviour
 
 
     void Awake()
-    {
+    {        
+        gText = transform.Find("GCost").GetComponent<Text>();
+        hText = transform.Find("HCost").GetComponent<Text>();
+        fText = transform.Find("FCost").GetComponent<Text>();
+        image = GetComponent<Image>();
         collider = GetComponent<Collider2D>();
-        Renderer r = GetComponent<Renderer>();
-        if (r != null)
-            material = r.material;
     }
 
     public void SetGCost(int cost)
     {
         gCost = cost;
+        gText.text = "G: " + cost;        
     }
 
     public void SetHCost(int cost)
     {
         hCost = cost;
+        hText.text = "H: " + cost;        
+        fText.text = "F: " + (hCost + gCost);
     }
 
     public void SetNode(int row, int col)
@@ -95,8 +104,8 @@ public class Node : MonoBehaviour
 
     public void SetColor(Color color)
     {
-        if (material != null)
-            material.color = color;
+        if (image != null)
+            image.color = color;
     }
 
     public bool Contains(Vector3 pos)
