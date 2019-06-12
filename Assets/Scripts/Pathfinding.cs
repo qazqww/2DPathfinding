@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class Pathfinding : MonoBehaviour
 {
+    Node startNode;
+    Node curNode;
+    Node targetNode;
+    List<Node> pathNode;
+    List<Node> curNeighbours = new List<Node>();   
+
     Grid2D grid2D;
     List<Node> closedList = new List<Node>();
     List<Node> openList = new List<Node>();
@@ -20,6 +26,84 @@ public class Pathfinding : MonoBehaviour
         int y = Mathf.Abs(a.Row - b.Row);
 
         return 14 * Mathf.Min(x, y) + 10 * Mathf.Abs(x - y);
+    }
+
+    public void Ready(Vector3 player, Vector3 target)
+    {
+        startNode = grid2D.FindNode(player);
+        targetNode = grid2D.FindNode(target);
+        Node currentNode = startNode;
+
+        startNode.SetGCost(0);
+        startNode.SetHCost(GetDistance(startNode, targetNode));
+        startNode.SetParent(null);
+        targetNode.SetParent(null);
+        curNode = startNode;
+
+        openList.Clear();
+        closedList.Clear();
+    }
+
+    public void Step()
+    {
+        Node[] neighbours = grid2D.Neighbours(curNode);
+        curNeighbours.Clear();
+        curNeighbours.AddRange(neighbours);
+
+        // 이웃 노드 순회
+        for (int i = 0; i < neighbours.Length; i++)
+        {
+            if (closedList.Contains(neighbours[i]))     // 이미 처리한 노드 생략
+                continue;
+            if (neighbours[i].nType == NodeType.Wall)   // 이동할 수 없는(벽) 노드 생략
+                continue;
+
+            // ※ G Cost : 시작 위치에서 현재 위치까지
+            
+            // 현재 노드까지의 거리 + 현재 노드에서 이웃 노드까지의 거리
+            int gCost = curNode.GCost + GetDistance(neighbours[i], curNode);
+
+            // 오픈 노드 리스트에 없거나, 이웃 노드의 gCost 값이 현재 gCost보다 크다면 갱신 처리
+            if (!openList.Contains(neighbours[i]) || gCost < neighbours[i].GCost)
+            {
+                // ※ H Cost : 현재 위치(이웃노드)에서 목표점까지
+                int hCost = GetDistance(neighbours[i], targetNode);
+                neighbours[i].SetGCost(gCost);
+                neighbours[i].SetHCost(hCost);
+                neighbours[i].SetParent(curNode);
+                neighbours[i].SetColor(Color.yellow);
+
+                if (!openList.Contains(neighbours[i]))
+                    openList.Add(neighbours[i]);
+            }
+        }
+
+        if (openList.Contains(curNode))
+            openList.Remove(curNode);
+        closedList.Add(curNode);
+
+        // 최소 비용인 노드를 현재 노드로 설정
+        if (openList.Count > 0)
+        {
+            openList.Sort(nodeComparer);
+            curNode = openList[0];
+        }
+
+        if (curNode == targetNode)
+        {
+            List<Node> nodes = RetracePath(curNode);
+            pathNode = nodes;
+
+            foreach (Node n in nodes)
+            {
+                n.GetComponent<Renderer>().material.color = Color.gray;
+            }
+
+            // 2초 뒤에 ResetNode 함수 호출
+            Invoke("ResetNode", 2.0f);
+            Debug.Log("찾음!");
+        }
+        ResetColor();
     }
 
     public void FindPath(Vector3 player, Vector3 target)
@@ -63,6 +147,7 @@ public class Pathfinding : MonoBehaviour
                     neighbours[i].SetGCost(gCost);
                     neighbours[i].SetHCost(hCost);
                     neighbours[i].SetParent(currentNode);
+                    neighbours[i].SetColor(Color.blue);
 
                     if (!openList.Contains(neighbours[i]))
                         openList.Add(neighbours[i]);
@@ -115,5 +200,34 @@ public class Pathfinding : MonoBehaviour
     public void ResetNode()
     {
         grid2D.ResetNode();
+    }
+
+    /* 검사완료 노드 : 회색
+     * 검사할 노드 : 노랑
+     * 이웃 노드 : 파랑
+     * 현재 노드 : 초록
+     * 타겟 노드 : 분홍
+     */
+    public void ResetColor()
+    {
+        foreach(var n in closedList)
+        {
+            n.SetColor(Color.gray);
+        }
+
+        foreach(var n in openList)
+        {
+            n.SetColor(Color.yellow);
+        }
+        
+        foreach(var n in curNeighbours)
+        {
+            n.SetColor(Color.blue);
+        }
+
+        if (curNode != null)
+            curNode.SetColor(Color.green);
+
+        targetNode.SetColor(Color.magenta);
     }
 }

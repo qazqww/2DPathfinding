@@ -15,7 +15,7 @@ public class Grid2D : MonoBehaviour
     void Awake()
     {
         nodePrefab = Resources.Load<Node>("Node");
-        CreateGrid(4);
+        CreateGrid(nodeCount);
     }
 
     void CreateGrid(int nodeCount)
@@ -34,10 +34,10 @@ public class Grid2D : MonoBehaviour
                 node.SetNode(row, col);
 
                 Renderer renderer = node.GetComponent<Renderer>();
-                if (renderer != null) {
-                    Vector3 color = Random.insideUnitSphere;
-                    renderer.material.color = new Color(color.x, color.y, color.z);
-                }
+                //if (renderer != null) {
+                //    Vector3 color = Random.insideUnitSphere;
+                //    renderer.material.color = new Color(color.x, color.y, color.z);
+                //}
             }
         }
     }
