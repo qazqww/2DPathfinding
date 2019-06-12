@@ -6,6 +6,7 @@ public class Pathfinding : MonoBehaviour
 {
     Node startNode;
     Node curNode;
+    Node prevNode;
     Node targetNode;
     List<Node> pathNode;
     List<Node> curNeighbours = new List<Node>();   
@@ -82,17 +83,20 @@ public class Pathfinding : MonoBehaviour
             openList.Remove(curNode);
         closedList.Add(curNode);
 
-        // 최소 비용인 노드를 현재 노드로 설정
+        // 최소 비용인 노드를 현재 노드로 설정 (다음 스텝으로)
         if (openList.Count > 0)
         {
+            if(curNode != null)
+                prevNode = curNode;
             openList.Sort(nodeComparer);
             curNode = openList[0];
         }
 
-        if (curNode == targetNode)
+        if (prevNode == targetNode)
         {
             List<Node> nodes = RetracePath(curNode);
             pathNode = nodes;
+            pathNode.RemoveAt(pathNode.Count - 1);
 
             foreach (Node n in nodes)
             {
@@ -147,7 +151,6 @@ public class Pathfinding : MonoBehaviour
                     neighbours[i].SetGCost(gCost);
                     neighbours[i].SetHCost(hCost);
                     neighbours[i].SetParent(currentNode);
-                    neighbours[i].SetColor(Color.blue);
 
                     if (!openList.Contains(neighbours[i]))
                         openList.Add(neighbours[i]);
@@ -211,23 +214,21 @@ public class Pathfinding : MonoBehaviour
     public void ResetColor()
     {
         foreach(var n in closedList)
-        {
             n.SetColor(Color.gray);
-        }
 
         foreach(var n in openList)
-        {
             n.SetColor(Color.yellow);
-        }
         
         foreach(var n in curNeighbours)
-        {
             n.SetColor(Color.blue);
-        }
 
-        if (curNode != null)
-            curNode.SetColor(Color.green);
+        if (prevNode != null)
+            prevNode.SetColor(Color.green);
 
         targetNode.SetColor(Color.magenta);
+
+        if(pathNode != null)
+            foreach (var n in pathNode)
+                n.SetColor(Color.red);
     }
 }
