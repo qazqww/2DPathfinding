@@ -25,11 +25,21 @@ public class Controller : MonoBehaviour
         else if (Input.GetMouseButtonDown(1))
         {
             endNode = RayCast();
-            pathfinding.Ready(startNode.Pos, endNode.Pos);
+            pathfinding.FindPathCoroutine(startNode.Pos, endNode.Pos);
         }
         else if (Input.GetKeyDown(KeyCode.Space))
         {
             pathfinding.Step();
+        }
+        else if (Input.GetKeyDown(KeyCode.R))
+        {
+            pathfinding.ResetNode();
+        }
+        else if (Input.GetKey(KeyCode.W))
+        {
+            Node node = RayCast();
+            if (node != null)
+                node.SetNodeType(NodeType.Wall);
         }
     }
 

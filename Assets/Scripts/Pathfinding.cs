@@ -16,6 +16,9 @@ public class Pathfinding : MonoBehaviour
     List<Node> openList = new List<Node>();
     NodeComparer nodeComparer = new NodeComparer();
 
+    bool execute = false;
+    List<Node> orderlist = new List<Node>();
+
     private void Awake()
     {
         grid2D = FindObjectOfType<Grid2D>();
@@ -31,6 +34,8 @@ public class Pathfinding : MonoBehaviour
 
     public void Ready(Vector3 player, Vector3 target)
     {
+        execute = true;
+
         startNode = grid2D.FindNode(player);
         targetNode = grid2D.FindNode(target);
 
@@ -104,6 +109,82 @@ public class Pathfinding : MonoBehaviour
             Debug.Log("찾음!");
         }
         ResetColor();
+    }
+
+    public void FindPathCoroutine(Vector3 startPos, Vector3 endPos)
+    {
+        if (!execute)
+        {
+            Ready(startPos, endPos);
+            StartCoroutine(IEStep());
+        }
+        else
+        {
+
+        }
+    }
+
+    public IEnumerator IEStep()
+    {
+        Node[] neighbours = grid2D.Neighbours(curNode);
+        curNeighbours.Clear();
+        curNeighbours.AddRange(neighbours);
+
+        // 이웃 노드 순회
+        for (int i = 0; i < neighbours.Length; i++)
+        {
+            if (closedList.Contains(neighbours[i]))     // 이미 처리한 노드 생략
+                continue;
+            if (neighbours[i].nType == NodeType.Wall)   // 이동할 수 없는(벽) 노드 생략
+                continue;
+
+            // ※ G Cost : 시작 위치에서 현재 위치까지
+
+            // 현재 노드까지의 거리 + 현재 노드에서 이웃 노드까지의 거리
+            int gCost = curNode.GCost + GetDistance(neighbours[i], curNode);
+
+            // 오픈 노드 리스트에 없거나, 이웃 노드의 gCost 값이 현재 gCost보다 크다면 갱신 처리
+            if (!openList.Contains(neighbours[i]) || gCost < neighbours[i].GCost)
+            {
+                // ※ H Cost : 현재 위치(이웃노드)에서 목표점까지
+                int hCost = GetDistance(neighbours[i], targetNode);
+                neighbours[i].SetGCost(gCost);
+                neighbours[i].SetHCost(hCost);
+                neighbours[i].SetParent(curNode);
+
+                if (!openList.Contains(neighbours[i]))
+                    openList.Add(neighbours[i]);
+            }
+        }
+
+        if (openList.Contains(curNode))
+            openList.Remove(curNode);
+        closedList.Add(curNode);
+
+        // 최소 비용인 노드를 현재 노드로 설정 (다음 스텝으로)
+        if (openList.Count > 0)
+        {
+            if (curNode != null)
+                prevNode = curNode;
+            openList.Sort(nodeComparer);
+            curNode = openList[0];
+        }
+
+        ResetColor();
+        yield return null;
+
+        if (prevNode == targetNode)
+        {
+            List<Node> nodes = RetracePath(curNode);
+            pathNode = nodes;
+            pathNode.RemoveAt(pathNode.Count - 1);
+            Debug.Log("찾음!");
+            ResetColor();
+            execute = false;
+        }
+        else
+            StartCoroutine(IEStep());
+
     }
 
     public void FindPath(Vector3 player, Vector3 target)
@@ -191,6 +272,14 @@ public class Pathfinding : MonoBehaviour
 
     public void ResetNode()
     {
+        curNode = null;
+        startNode = null;
+        targetNode = null;
+        prevNode = null;
+        pathNode.Clear();
+        curNeighbours.Clear();        
+        openList.Clear();
+        closedList.Clear();
         grid2D.ResetNode();
     }
 
