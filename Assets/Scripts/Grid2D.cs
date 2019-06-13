@@ -103,7 +103,7 @@ public class Grid2D : MonoBehaviour
     {
         for (int row = 0; row < nodeCount; row++) {
             for (int col = 0; col < nodeCount; col++) {
-                    nodeArr[row, col].SetColor(Color.white);
+                    nodeArr[row, col].Reset();
             }
         }
     }

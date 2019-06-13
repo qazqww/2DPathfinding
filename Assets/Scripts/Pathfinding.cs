@@ -1,6 +1,23 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+public struct PairNode : IEquatable<PairNode>
+{
+    public BaseChar player;
+    public BaseChar target;
+
+    public bool Equals(PairNode other)
+    {
+        if (other.player == null || other.target == null)
+            return true;
+        else if (player == null)
+            return true;
+
+        return other.player.Equals(player);
+    }
+}
 
 public class Pathfinding : MonoBehaviour
 {
@@ -17,7 +34,7 @@ public class Pathfinding : MonoBehaviour
     NodeComparer nodeComparer = new NodeComparer();
 
     bool execute = false;
-    List<Node> orderlist = new List<Node>();
+    List<PairNode> orderlist = new List<PairNode>();
 
     private void Awake()
     {
@@ -110,7 +127,7 @@ public class Pathfinding : MonoBehaviour
         }
         ResetColor();
     }
-
+    
     public void FindPathCoroutine(Vector3 startPos, Vector3 endPos)
     {
         if (!execute)
@@ -122,7 +139,7 @@ public class Pathfinding : MonoBehaviour
         {
 
         }
-    }
+    }    
 
     public IEnumerator IEStep()
     {

@@ -73,6 +73,16 @@ public class Node : MonoBehaviour
         collider = GetComponent<Collider2D>();
     }
 
+    public void Reset()
+    {
+        nodeType = NodeType.None;
+        fText.text = "F : ";
+        hText.text = "H : ";
+        gText.text = "G : ";
+        parent = null;
+        image.color = Color.white;
+    }
+
     public void SetGCost(int cost)
     {
         gCost = cost;
@@ -99,11 +109,17 @@ public class Node : MonoBehaviour
 
     public void SetNodeType(NodeType nodeType)
     {
+        if (nodeType == NodeType.Wall)
+            SetColor(Color.cyan);
+
         this.nodeType = nodeType;
     }
 
     public void SetColor(Color color)
     {
+        if (nodeType == NodeType.Wall)
+            return;
+
         if (image != null)
             image.color = color;
     }
