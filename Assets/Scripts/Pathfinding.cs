@@ -127,21 +127,27 @@ public class Pathfinding : MonoBehaviour
         }
         ResetColor();
     }
-    
-    public void FindPathCoroutine(Vector3 startPos, Vector3 endPos)
+
+    public void FindPathCoroutine(BaseChar player, BaseChar target)
     {
         if (!execute)
         {
-            Ready(startPos, endPos);
-            StartCoroutine(IEStep());
+            Ready(player.transform.position, target.transform.position);
+            StartCoroutine(IEStep(player));
         }
         else
         {
-
+            PairNode pairNode = new PairNode();
+            pairNode.player = player;
+            pairNode.target = target;
+            if(orderlist.Contains(pairNode))
+            {
+                
+            }
         }
-    }    
+    }
 
-    public IEnumerator IEStep()
+    public IEnumerator IEStep(BaseChar player)
     {
         Node[] neighbours = grid2D.Neighbours(curNode);
         curNeighbours.Clear();
@@ -200,7 +206,7 @@ public class Pathfinding : MonoBehaviour
             execute = false;
         }
         else
-            StartCoroutine(IEStep());
+            StartCoroutine(IEStep(player));
 
     }
 

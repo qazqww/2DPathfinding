@@ -6,6 +6,8 @@ public class Controller : MonoBehaviour
 {
     Node startNode;
     Node endNode;
+    Player player;
+    Target target;
 
     Grid2D grid2D;
     Pathfinding pathfinding;
@@ -14,6 +16,8 @@ public class Controller : MonoBehaviour
     {
         grid2D = FindObjectOfType<Grid2D>();
         pathfinding = FindObjectOfType<Pathfinding>();
+        player = FindObjectOfType<Player>();
+        target = FindObjectOfType<Target>();
     }
     
     void Update()
@@ -21,11 +25,13 @@ public class Controller : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             startNode = RayCast();
+            player.transform.position = RayCast().Pos;
         }
         else if (Input.GetMouseButtonDown(1))
         {
             endNode = RayCast();
-            pathfinding.FindPathCoroutine(startNode.Pos, endNode.Pos);
+            target.transform.position = RayCast().Pos;
+            pathfinding.FindPathCoroutine(player, target);
         }
         else if (Input.GetKeyDown(KeyCode.Space))
         {
